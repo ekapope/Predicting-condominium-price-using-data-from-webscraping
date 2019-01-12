@@ -115,7 +115,7 @@ for link in condo_links_all:
     time_elapsed = datetime.now() - start_time
     print('Time elapsed (hh:mm:ss.ms) {}'.format(time_elapsed))
     
-    ### Give the 'sleep' time. Space out each request so the server isn’t overwhelmed.
+    ### Give the 'sleep' time = 5 seconds. Space out each request so the server isn’t overwhelmed.
     time.sleep(5)
     i=i+1
 
@@ -138,3 +138,12 @@ condo_list = [c for c in condo_list if c is not None]
 df_completed = pd.DataFrame(condo_list)
 with open('df_completed.pkl', 'wb') as f:
     pk.dump(df_completed, f)
+    
+# export to csv
+col_names= ['name','district','latitude','longitude','year_built','proj_area','nbr_buildings','nbr_floors','units',
+            'shops','schools','restaurants','hospital','amenities','transportation',
+            'price_sqm','change_last_q','change_last_y','rental_yield','change_last_y_rental_price','price_hist']
+df_completed.to_csv("df_completed.csv" ,header=col_names,index=False,encoding='utf-8-sig')
+
+#load csv
+df_dirty= pd.read_csv("df_completed.csv", sep=',',encoding='utf-8-sig')
