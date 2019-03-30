@@ -13,6 +13,8 @@ import pandas as pd
 import pickle as pk
 from bs4 import BeautifulSoup
 import requests
+import os
+os.chdir(r"D:\GitHub_Personal\2019-01-Web-Scraping-using-selenium-and-bs4")
 
 # open the output text file
 with open('condo_links_all.txt') as f:
