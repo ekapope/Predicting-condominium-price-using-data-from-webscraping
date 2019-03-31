@@ -19,7 +19,7 @@ import os
 os.chdir(r"D:\GitHub_Personal\2019-01-Web-Scraping-using-selenium-and-bs4")
 
 #load csv
-df= pd.read_csv("df_completed.csv", sep=',',encoding='utf-8-sig')
+df= pd.read_csv("data\scraped_data\df_completed.csv", sep=',',encoding='utf-8-sig')
 
 df.isnull().sum()
 df.info()
@@ -36,7 +36,7 @@ df['district'] = df['district'].str.strip()
 df['latitude'] = pd.to_numeric(df['latitude'].str.replace('\"',''))
 df['longitude'] = pd.to_numeric(df['longitude'].str.replace('\"',''))
 
-#add building age 2019-'year_built'
+#add building age 2020-'year_built'
 df['bld_age'] = 2019-df['year_built']
 
 #replace , and change to numeric
@@ -117,6 +117,11 @@ df['transportation']=df['transportation'].str.replace('\'','').str.split('\,')
 # check the split
 len_chk = df['transportation'].apply(lambda x: len(x))
 df['transportation'][0]
+
+# element number 0,3,6,9,12 are station types
+col_list = ['tran_type'+str(i) for i in range(1, 6)]
+df[col_list]= df['transportation'].apply(pd.Series).iloc[:,[0,3,6,9,12]]
+for col in col_list: df[col]=df[col].apply(lambda x: re.findall("(expressway|mrt|bts)", x)[0])
 # element number 1,4,7,10,13 are station names
 col_list = ['tran_name'+str(i) for i in range(1, 6)]
 df[col_list]= df['transportation'].apply(pd.Series).iloc[:,[1,4,7,10,13]].apply(lambda x: x.str.strip())
@@ -128,7 +133,7 @@ df[col_list]= df['transportation'].apply(pd.Series).iloc[:,[2,5,8,11,14]]
 for col in col_list: df[col]=df[col].apply(lambda x: find_dist(x))
 
 #drop id, name, date columns
-df.drop(['year_built','shops', 'schools', 'restaurants', 'amenities',
+df.drop(['shops', 'schools', 'restaurants', 'amenities',
          'transportation','change_last_q', 'change_last_y', 'rental_yield',
          'change_last_y_rental_price', 'price_hist'], axis=1, inplace=True)
 
@@ -136,4 +141,4 @@ df.isnull().sum()
 df.info()
 
 #export to csv
-df.to_csv("df_cleaned_for_ML_regression.csv", index=False, encoding='utf-8-sig')
+df.to_csv(r"data\regression_data\df_cleaned_for_ML_regression.csv", index=False, encoding='utf-8-sig')

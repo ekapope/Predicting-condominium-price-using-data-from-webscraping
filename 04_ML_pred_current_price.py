@@ -20,108 +20,93 @@ import seaborn as sns
 import scipy
 
 # import sklearn data preprocessing
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import StandardScaler, RobustScaler
+from sklearn.pipeline import make_pipeline,Pipeline
+from sklearn.pipeline import Pipeline
 
 # import sklearn model class
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import Lasso
-from sklearn.linear_model import Ridge
-from sklearn.linear_model import ElasticNet
-from sklearn.kernel_ridge import KernelRidge
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.ensemble import GradientBoostingRegressor
 
 # import sklearn model selection
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import train_test_split
-
+from sklearn.model_selection import train_test_split, GridSearchCV, KFold, cross_val_score, cross_val_predict, validation_curve
 # import sklearn model evaluation regression metrics
-from sklearn.metrics import mean_squared_error
+from sklearn import metrics
+from sklearn.metrics import make_scorer,mean_squared_error, r2_score
 
-df=pd.read_csv(".\df_clean\df_cleaned.csv")
+###############################################################################
+df=pd.read_csv(r"data\regression_data\df_cleaned_for_ML_regression.csv")
 #goal is to predict current price, drop all duplicates
-df = df.drop_duplicates('id')
 print(df.info())
 print(df['district'].nunique())
+print(df['tran_type1'].nunique())
+
+# exclude everything with a price above or below 3 standard deviations (i.e. outliers)
+df = df[np.abs(df["price_sqm"]-df["price_sqm"].mean())<=(3*df["price_sqm"].std())]
+
 #get dummies for district column
+#df = pd.get_dummies(df, columns=['district'])
 df = pd.get_dummies(df, columns=['district'])
-#drop id, name, date columns
-df = df.drop(['id', 'name','date','latitude','longitude','value'], axis=1)
+#drop id, name columns
+df = df.drop(['id', 'name','bld_age',
+              'tran_type1','tran_type2','tran_type3', 'tran_type4', 'tran_type5',
+              'tran_name1','tran_name2', 'tran_name3', 'tran_name4', 'tran_name5'], axis=1)
+#df = df.drop(['id', 'name'], axis=1)
 
 print(df.info())
+df['price_sqm'].describe()
+plt.hist(df['price_sqm'])
+
+corr_matrix = df.corr()
+np.abs(corr_matrix["price_sqm"]).sort_values(ascending=False)
 
 # select all features to evaluate the feature importances
 X = df.drop('price_sqm', axis=1)
-X_colnames = X.columns
-y = df[['price_sqm']]
+y = df['price_sqm']
 
-# create scaler to the features
-scaler = RobustScaler()
-X = scaler.fit_transform(X)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=121)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=123)
+###############################################################################
+# define function for output and plotting
+def rmse_cv(model,n_folds=5):
+    kf = KFold(n_folds, shuffle=True, random_state=121)
+    rmse= np.sqrt(-cross_val_score(model, X_train, y_train, scoring="neg_mean_squared_error", cv = kf))
+#    cv_scores = cross_val_score(model, X, y, cv=kf)
+    model.fit(X_train, y_train) 
+    y_pred = model.predict(X_test)
+    r_sq_score = r2_score(y_test, y_pred)
+    plt.scatter(y_test, y_pred)    
+    plt.title(model)
+    plt.xlabel("True prices")
+    plt.ylabel("Predicted prices")  
+#    plt.text(-1,220000, ' R-squared = {}'.format(float(cv_scores.mean())))
+#    plt.text(-1,200000, ' R-squared Std = {}'.format(float(cv_scores.std())))
+#    plt.text(-1,180000, ' MSE = {}'.format(round(float(mean_squared_error(y_test, predicted)), 2)))
+    plt.show()
+    return(rmse, r_sq_score)
+###############################################################################
+    
+ols = make_pipeline(RobustScaler(), LinearRegression())
+rmse,r_sq_score = rmse_cv(ols)
+print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
 
-# set up lasso regression to find the feature importances
-lassoreg = Lasso(alpha=1e-5).fit(X_train, y_train)
-feat = pd.DataFrame(data=lassoreg.coef_, \
-                    index=X_colnames, \
-                    columns=['FeatureImportances']).sort_values(['FeatureImportances'], \
-                            ascending=False)
+###############################################################################
 
+# manually tune alpha(s)
+alpha_list =[0.0001,0.001,0.01,0.1,1,10,100]
+result=[]
+for alpha_val in alpha_list:
+    ridge = make_pipeline(RobustScaler(), Ridge(alpha= alpha_val))
+    rmse,r_sq_score = rmse_cv(ridge)
+    print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
+    result.append([alpha_val,np.mean(rmse),r_sq_score])
+ridge_result = pd.DataFrame(result, columns = ['alpha_val','np.mean(rmse)','r_sq_score'])
 
-### linear regression model setup
-md_lr = LinearRegression()
+###############################################################################
 
-# linear regression model fit
-md_lr.fit(X_train, y_train)
-
-# linear regression model prediction
-md_lr_y_pred = md_lr.predict(X_test)
-
-# linear regression model metrics
-md_lr_r_square = md_lr.score(X_test, y_test)
-
-md_lr_mse = mean_squared_error(y_test, md_lr_y_pred) ** 0.5
-md_lr_cvscores = np.sqrt(np.abs(cross_val_score(md_lr, X, y, cv=5,\
-                                                       scoring='neg_mean_squared_error')))
-print('linear regression\n  root mean squared error: %0.4f,\
-      cross validation score: %0.4f (+/- %0.4f)' \
-      %(md_lr_mse, md_lr_cvscores.mean(), 2 * md_lr_cvscores.std()))
-
-
-
-### lasso regression model setup
-md_lasso = Lasso(alpha=0.001)
-
-# lasso regression md fit
-md_lasso.fit(X_train, y_train)
-
-# lasso regression md prediction
-md_lasso_y_pred = md_lasso.predict(X_test)
-
-# lasso regression md metrics
-md_lasso_r_square = md_lasso.score(X_test, y_test)
-
-md_lasso_mse = mean_squared_error(y_test, md_lasso_y_pred) ** 0.5
-md_lasso_cvscores = np.sqrt(np.abs(cross_val_score(md_lasso, X, y, cv=5, scoring='neg_mean_squared_error')))
-print('lasso regression\n  root mean squared error: %0.4f, cross validation score: %0.4f (+/- %0.4f)' %(md_lasso_mse, md_lasso_cvscores.mean(), 2 * md_lasso_cvscores.std()))
-
-
-# specify the hyperparameter space
-params = {'alpha': np.logspace(-4, 4, base=10, num=9)}
-
-# lasso regression grid search model setup
-model_lassoreg_cv = GridSearchCV(md_lasso, params, cv=5)
-
-# lasso regression grid search model fit
-model_lassoreg_cv.fit(X_train, y_train)
-
-# lasso regression grid search model prediction
-model_lassoreg_cv_ypredict = model_lassoreg_cv.predict(X_test)
-
-# lasso regression grid search model metrics
-model_lassoreg_cv_mse = mean_squared_error(y_test, model_lassoreg_cv_ypredict) ** 0.5
-model_lassoreg_cv_cvscores = np.sqrt(np.abs(cross_val_score(model_lassoreg_cv, X, y, cv=5, scoring='neg_mean_squared_error')))
-print('lasso regression grid search\n  root mean squared error: %0.4f, cross validation score: %0.4f (+/- %0.4f)' %(model_lassoreg_cv_mse, model_lassoreg_cv_cvscores.mean(), 2 * model_lassoreg_cv_cvscores.std()))
-print('  best parameters: %s' %model_lassoreg_cv.best_params_)
+GBoost = GradientBoostingRegressor(n_estimators=3000, learning_rate=0.05,
+                                   max_depth=4, max_features='sqrt',
+                                   min_samples_leaf=15, min_samples_split=10, 
+                                   loss='huber', random_state =121)
+rmse,r_sq_score = rmse_cv(GBoost)
+print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
