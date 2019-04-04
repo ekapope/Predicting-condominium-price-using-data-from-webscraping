@@ -26,7 +26,7 @@ from sklearn.pipeline import Pipeline
 
 # import sklearn model class
 from sklearn.linear_model import LinearRegression, Ridge
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 
 # import sklearn model selection
 from sklearn.model_selection import train_test_split, GridSearchCV, KFold, cross_val_score, cross_val_predict, validation_curve
@@ -89,9 +89,31 @@ def rmse_cv(model,n_folds=5):
 ols = make_pipeline(RobustScaler(), LinearRegression())
 rmse,r_sq_score = rmse_cv(ols)
 print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
-
 ###############################################################################
+from sklearn.model_selection import GridSearchCV
+# Create the parameter grid based on the results of random search 
+param_grid = {
+    'bootstrap': [True],
+    'max_depth': [80, 90, 100, 110],
+    'max_features': [9, 40],
+    'min_samples_leaf': [3, 4, 5],
+    'min_samples_split': [8, 10, 12],
+    'n_estimators': [100, 200, 300, 1000]
+}
+# Create a based model
+rf = make_pipeline(RobustScaler(), RandomForestRegressor())
+# Instantiate the grid search model
+grid_search = GridSearchCV(estimator = rf, param_grid = param_grid, 
+                          cv = 5, n_jobs = -1, verbose = 2)
+# Fit the grid search to the data
+grid_search.fit(X_train, y_train)
+grid_search.best_params_
 
+best_grid = grid_search.best_estimator_
+rmse,r_sq_score = rmse_cv(rf)
+print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
+###############################################################################
+# ridge regession
 # manually tune alpha(s)
 alpha_list =[0.0001,0.001,0.01,0.1,1,10,100]
 result=[]
@@ -101,7 +123,6 @@ for alpha_val in alpha_list:
     print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
     result.append([alpha_val,np.mean(rmse),r_sq_score])
 ridge_result = pd.DataFrame(result, columns = ['alpha_val','np.mean(rmse)','r_sq_score'])
-
 ###############################################################################
 
 GBoost = GradientBoostingRegressor(n_estimators=3000, learning_rate=0.05,
