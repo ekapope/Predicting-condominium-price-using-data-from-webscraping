@@ -19,3 +19,16 @@ Check NAs and data types for each column. Perform data manipulation by clean eac
 Robust Scaler  is used in the pipeline before passing through the ML models. It uses a similar method to the Min-Max scaler but it instead uses the interquartile range, rather than the min-max, so that it is robust to outliers. 
 
 [004_1_ML_pred_current_price.py](https://github.com/ekapope/2019-01-Web-Scraping-using-selenium-and-bs4/blob/master/004_1_ML_pred_current_price.py)
+
+
+### Three machine learning algorithms were used in the project
+The results are shown in table below.
+
+
+![Scatter plot the result of Gradient Boosting Regressor](https://github.com/ekapope/2019-01-Web-Scraping-using-selenium-and-bs4/blob/master/ipython_files/qt_img121839632252933.png "Gradient Boosting Result")
+
+
+For detail explanation, please refer to the [PDF report]().
+
+
+
