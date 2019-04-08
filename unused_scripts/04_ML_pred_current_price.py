@@ -6,7 +6,7 @@ Created on Sun Mar 24 19:47:53 2019
 """
 
 import os
-os.chdir(r"D:\GitHub_Personal\2019-01-Web-Scraping-using-selenium-and-bs4")
+os.chdir(r"C:\Users\eviriyakovithya\Documents\GitHub\2019-01-Web-Scraping-using-selenium-and-bs4")
 
 # import data manipulation library
 import numpy as np
@@ -85,10 +85,20 @@ def rmse_cv(model,n_folds=5):
     plt.show()
     return(rmse, r_sq_score)
 ###############################################################################
-    
-ols = make_pipeline(RobustScaler(), LinearRegression())
-rmse,r_sq_score = rmse_cv(ols)
-print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
+#ols = make_pipeline(RobustScaler(), LinearRegression())
+#rmse,r_sq_score = rmse_cv(ols)
+#print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
+###############################################################################
+# ridge regression
+# manually tune alpha(s)
+alpha_list =[0.0001,0.001,0.01,0.1,1,10,100]
+result=[]
+for alpha_val in alpha_list:
+    ridge = make_pipeline(RobustScaler(), Ridge(alpha= alpha_val))
+    rmse,r_sq_score = rmse_cv(ridge)
+    print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
+    result.append([alpha_val,np.mean(rmse),r_sq_score])
+ridge_result = pd.DataFrame(result, columns = ['alpha_val','np.mean(rmse)','r_sq_score'])
 ###############################################################################
 from sklearn.model_selection import GridSearchCV
 # Create the parameter grid based on the results of random search 
@@ -101,33 +111,73 @@ param_grid = {
     'n_estimators': [100, 200, 300, 1000]
 }
 # Create a based model
-rf = make_pipeline(RobustScaler(), RandomForestRegressor())
+rf = RandomForestRegressor()
 # Instantiate the grid search model
 grid_search = GridSearchCV(estimator = rf, param_grid = param_grid, 
                           cv = 5, n_jobs = -1, verbose = 2)
+#Fitting 5 folds for each of 288 candidates, totalling 1440 fits
+#[Parallel(n_jobs=-1)]: Using backend LokyBackend with 4 concurrent workers.
+#[Parallel(n_jobs=-1)]: Done  33 tasks      | elapsed:   12.4s
+#[Parallel(n_jobs=-1)]: Done 154 tasks      | elapsed:   44.9s
+#[Parallel(n_jobs=-1)]: Done 357 tasks      | elapsed:  2.5min
+#[Parallel(n_jobs=-1)]: Done 640 tasks      | elapsed:  4.2min
+#[Parallel(n_jobs=-1)]: Done 1005 tasks      | elapsed:  7.2min
+#[Parallel(n_jobs=-1)]: Done 1440 out of 1440 | elapsed: 11.4min finished
 # Fit the grid search to the data
 grid_search.fit(X_train, y_train)
 grid_search.best_params_
-
+#{'bootstrap': True,
+# 'max_depth': 80,
+# 'max_features': 40,
+# 'min_samples_leaf': 3,
+# 'min_samples_split': 8,
+# 'n_estimators': 200}
 best_grid = grid_search.best_estimator_
+rf_best = make_pipeline(RobustScaler(), best_grid)
 rmse,r_sq_score = rmse_cv(rf)
 print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
 ###############################################################################
-# ridge regession
-# manually tune alpha(s)
-alpha_list =[0.0001,0.001,0.01,0.1,1,10,100]
-result=[]
-for alpha_val in alpha_list:
-    ridge = make_pipeline(RobustScaler(), Ridge(alpha= alpha_val))
-    rmse,r_sq_score = rmse_cv(ridge)
-    print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
-    result.append([alpha_val,np.mean(rmse),r_sq_score])
-ridge_result = pd.DataFrame(result, columns = ['alpha_val','np.mean(rmse)','r_sq_score'])
-###############################################################################
+param_grid = {
+    'learning_rate': [0.05],
+    'max_depth': [10, 20, 50, 100],
+    'max_features': ['sqrt'],
+    'min_samples_leaf': [3, 5, 10],
+    'min_samples_split': [5, 10, 15],
+    'n_estimators': [100, 200, 300, 1000,3000],    
+    'loss': ['huber'],
+    'random_state': [121]   
+}
+# Create a based model
+GBoost = GradientBoostingRegressor()
+# Instantiate the grid search model
+grid_search_GBoost = GridSearchCV(estimator = GBoost, param_grid = param_grid, 
+                          cv = 5, n_jobs = -1, verbose = 2)
 
-GBoost = GradientBoostingRegressor(n_estimators=3000, learning_rate=0.05,
-                                   max_depth=4, max_features='sqrt',
-                                   min_samples_leaf=15, min_samples_split=10, 
-                                   loss='huber', random_state =121)
-rmse,r_sq_score = rmse_cv(GBoost)
+grid_search_GBoost.fit(X_train, y_train)
+grid_search_GBoost.best_params_
+#Fitting 5 folds for each of 180 candidates, totalling 900 fits
+#[Parallel(n_jobs=-1)]: Using backend LokyBackend with 4 concurrent workers.
+#[Parallel(n_jobs=-1)]: Done  33 tasks      | elapsed:  2.0min
+#[Parallel(n_jobs=-1)]: Done 154 tasks      | elapsed:  8.4min
+#[Parallel(n_jobs=-1)]: Done 357 tasks      | elapsed: 22.7min
+#[Parallel(n_jobs=-1)]: Done 640 tasks      | elapsed: 43.2min
+#[Parallel(n_jobs=-1)]: Done 900 out of 900 | elapsed: 62.8min finished
+#{'learning_rate': 0.05,
+# 'loss': 'huber',
+# 'max_depth': 50,
+# 'max_features': 'sqrt',
+# 'min_samples_leaf': 10,
+# 'min_samples_split': 5,
+# 'n_estimators': 3000,
+# 'random_state': 121}
+best_grid_search_GBoost = grid_search_GBoost.best_estimator_
+GBoost_best = make_pipeline(RobustScaler(), best_grid_search_GBoost)
+rmse,r_sq_score = rmse_cv(GBoost_best)
 print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))
+
+#GBoost = GradientBoostingRegressor(n_estimators=3000, learning_rate=0.05,
+#                                   max_depth=4, max_features='sqrt',
+#                                   min_samples_leaf=15, min_samples_split=10, 
+#                                   loss='huber', random_state =121)
+#rmse,r_sq_score = rmse_cv(GBoost)
+#print('RMS: {:.2f}'.format(rmse.mean()),'r2_score: '+ str(r_sq_score))

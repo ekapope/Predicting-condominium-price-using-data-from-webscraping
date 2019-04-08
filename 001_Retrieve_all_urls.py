@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jan 12 07:18:59 2019
+*** To be able to run this script, selenium and google chrome webdriver are needed.
 
-@author: eviriyakovithya
+This script will:
+1. retrieve url links for all district in Bangkok, Thailand listed on hipflat website.
+2. retrieve url links for all condomeniums listed on each district.
+3. save the data to condo_links_all.txt
 """
 
 # Import packages
-
-
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime
