@@ -1,7 +1,7 @@
-# Predicting condominium price using data from webscraping
+# Predicting condominium price using data from web scraping
 
 
-### 1.	Data set and explanation webscraping process
+### 1.	Data set and explanation web scraping process
 This project uses Selenium library to firstly obtain all condominiums listed on the https://www.hipflat.com/ website, and extracts information for each page using BeautifulSoup package. Hipflat is one of the biggest property listing website in Thailand. This project is focused on condominium listings in Bangkok, both new and resale. Refer to below links for Python scripts.
 
 [001_Retrieve_all_urls.py](https://github.com/ekapope/2019-01-Web-Scraping-using-selenium-and-bs4/blob/master/001_Retrieve_all_urls.py)
