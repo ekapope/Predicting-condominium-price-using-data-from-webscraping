@@ -18,7 +18,7 @@ Check NAs and data types for each column. Perform data manipulation by clean eac
 ### 3.	Data scaling and hyperparameter tuning & ML
 Robust Scaler  is used in the pipeline before passing through the ML models. It uses a similar method to the Min-Max scaler but it instead uses the interquartile range, rather than the min-max, so that it is robust to outliers. 
 
-[004_1_ML_pred_current_price.py](https://github.com/ekapope/2019-01-Web-Scraping-using-selenium-and-bs4/blob/master/004_1_ML_pred_current_price.py)
+[004_ML_pred_current_price.py](https://github.com/ekapope/Predicting-condominium-price-using-data-from-webscraping/blob/master/004_ML_pred_current_price.py)
 
 
 ### Three machine learning algorithms were used in the project
@@ -27,7 +27,7 @@ Robust Scaler  is used in the pipeline before passing through the ML models. It 
 3. GradientBoostingRegressor
 
 The results are shown below.
-![Result table](https://github.com/ekapope/2019-01-Web-Scraping-using-selenium-and-bs4/blob/master/ipython_files/result_table.PNG "Result table")
+![Result table](https://github.com/ekapope/Predicting-condominium-price-using-data-from-webscraping/blob/master/ipython_files/result_table.PNG "Result table")
 
 
 ![Scatter plot the result of Gradient Boosting Regressor](https://github.com/ekapope/2019-01-Web-Scraping-using-selenium-and-bs4/blob/master/ipython_files/qt_img121839632252933.png "Gradient Boosting Result")
@@ -44,7 +44,7 @@ In the webscraping step, we should acquire all listings available in each condo,
 We have scraped some quarterly historical prices but still did not use in this project since there were some unreliability issues in the data. It required verification and data cleaning. This historical data can be really useful to visualize the trends for each condo/area (which areas are growing rapidly and/or reaching plateau stage or declining). 
 
 
-For detail explanation, please refer to the [PDF report](https://github.com/ekapope/2019-01-Web-Scraping-using-selenium-and-bs4/blob/master/20190408_Project_Description.pdf).
+For detail explanation, please refer to the [PDF report](https://github.com/ekapope/Predicting-condominium-price-using-data-from-webscraping/blob/master/Predicting-condominium-price-using-data-from-webscraping.pdf).
 
 
 
