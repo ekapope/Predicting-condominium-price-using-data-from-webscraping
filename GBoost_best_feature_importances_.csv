@@ -1,0 +1,83 @@
+,feature_importances_
+latitude,0.05983901131600124
+longitude,0.044101923699185586
+year_built,0.0842642528749659
+proj_area,0.025932904372413797
+nbr_buildings,0.01105350977038233
+nbr_floors,0.08433611038310518
+units,0.02011674417912574
+hospital,0.03560036332987598
+dist_shop_1,0.016282991773205174
+dist_shop_2,0.015440084900335448
+dist_shop_3,0.023591337871632884
+dist_shop_4,0.01092170056466722
+dist_shop_5,0.020048756018425696
+dist_school_1,0.009131257353490931
+dist_school_2,0.011937450144970385
+dist_school_3,0.009401222599357273
+dist_school_4,0.01332366855314599
+dist_school_5,0.014297838328352878
+dist_food_1,0.012053652371564808
+dist_food_2,0.017819153709632964
+dist_food_3,0.012311252297387837
+dist_food_4,0.04998726954650712
+dist_food_5,0.020610122706759666
+Elevator,0.00010088100449238701
+Parking,0.0
+Security,0.0
+CCTV,0.0
+Pool,0.010352046845928952
+Sauna,0.004914897282190035
+Gym,0.006169387010918445
+Garden,0.01192294888380526
+Playground,0.0011552862344664748
+Shop,0.005146392408160411
+Restaurant,0.0003986405864304267
+Wifi,0.003212199985346903
+dist_tran_1,0.0558150308872598
+dist_tran_2,0.06344100778221419
+dist_tran_3,0.09370970940959873
+dist_tran_4,0.035105491320725206
+dist_tran_5,0.0740690106978214
+district_Bang Kapi,5.327803611130019e-06
+district_Bang Khae,0.0
+district_Bang Khen,2.480177566703941e-07
+district_Bang Kho Laem,0.0
+district_Bang Khun Thian,0.0
+district_Bang Na,3.728748359057267e-05
+district_Bang Phlat,5.1628308396045796e-05
+district_Bang Rak,0.002510005724422542
+district_Bang Sue,1.1868449704235365e-07
+district_Bangkok Noi,0.0
+district_Bangkok Yai,0.0
+district_Bueng Kum,0.0
+district_Chatuchak,0.0011454367774747275
+district_Chom Thong,0.0
+district_Din Daeng,0.00041824840005137633
+district_Don Mueang,0.0
+district_Dusit,0.0
+district_Huai Khwang,3.82058399477563e-05
+district_Khan Na Yao,0.0
+district_Khlong San,5.223528785154193e-06
+district_Khlong Toei,0.0033238537914947784
+district_Lak Si,0.0
+district_Lat Krabang,0.0
+district_Lat Phrao,0.0
+district_Min Buri,0.0
+district_Pathum Wan,0.0020720724370922703
+district_Phasi Charoen,0.0
+district_Phaya Thai,0.0001294741206117734
+district_Phra Khanong,0.00017181330542590775
+district_Pom Prap Sattru Phai,0.0
+district_Prawet,0.0
+district_Rat Burana,0.0
+district_Ratchathewi,4.9116357498263064e-05
+district_Sai Mai,0.0
+district_Samphanthawong,0.0
+district_Sathon,1.962872790904184e-05
+district_Suan Luang,6.058019941023777e-07
+district_Taling Chan,0.0
+district_Thon Buri,2.5609330740155747e-05
+district_Wang Thonglang,0.0
+district_Watthana,0.0020790284684948754
+district_Yan Nawa,1.5580863551377948e-06

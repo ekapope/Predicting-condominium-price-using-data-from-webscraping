@@ -1,0 +1,33 @@
+,ridge_model,alpha_val,rmse_test,r2_test
+0,"Pipeline(memory=None,
+     steps=[('robustscaler', RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True)), ('ridge', Ridge(alpha=0.0001, copy_X=True, fit_intercept=True, max_iter=None,
+   normalize=False, random_state=121, solver='auto', tol=0.001))])",0.0001,29537.74992547105,0.6694165072439878
+1,"Pipeline(memory=None,
+     steps=[('robustscaler', RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True)), ('ridge', Ridge(alpha=0.001, copy_X=True, fit_intercept=True, max_iter=None,
+   normalize=False, random_state=121, solver='auto', tol=0.001))])",0.001,29540.783235173516,0.6693486067704087
+2,"Pipeline(memory=None,
+     steps=[('robustscaler', RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True)), ('ridge', Ridge(alpha=0.01, copy_X=True, fit_intercept=True, max_iter=None,
+   normalize=False, random_state=121, solver='auto', tol=0.001))])",0.01,29570.289885877657,0.6686877381902989
+3,"Pipeline(memory=None,
+     steps=[('robustscaler', RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True)), ('ridge', Ridge(alpha=0.1, copy_X=True, fit_intercept=True, max_iter=None,
+   normalize=False, random_state=121, solver='auto', tol=0.001))])",0.1,29800.010560233615,0.6635200574576327
+4,"Pipeline(memory=None,
+     steps=[('robustscaler', RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True)), ('ridge', Ridge(alpha=1, copy_X=True, fit_intercept=True, max_iter=None,
+   normalize=False, random_state=121, solver='auto', tol=0.001))])",1.0,30441.21304777632,0.6488842958024568
+5,"Pipeline(memory=None,
+     steps=[('robustscaler', RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True)), ('ridge', Ridge(alpha=10, copy_X=True, fit_intercept=True, max_iter=None,
+   normalize=False, random_state=121, solver='auto', tol=0.001))])",10.0,31262.761013718886,0.6296767266367544
+6,"Pipeline(memory=None,
+     steps=[('robustscaler', RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True)), ('ridge', Ridge(alpha=100, copy_X=True, fit_intercept=True, max_iter=None,
+   normalize=False, random_state=121, solver='auto', tol=0.001))])",100.0,32368.293238218794,0.6030224518859741
+7,"Pipeline(memory=None,
+     steps=[('robustscaler', RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True)), ('ridge', Ridge(alpha=1000, copy_X=True, fit_intercept=True, max_iter=None,
+   normalize=False, random_state=121, solver='auto', tol=0.001))])",1000.0,39242.222707533154,0.41650983321354684
