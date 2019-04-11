@@ -38,10 +38,12 @@ The results are shown below.
 Even this dataset is quite small with lots of features and we can only predict the price per square meters for each condo, however, this study is very useful for buyers, resellers, agents and even developers to justify the 'fair price' as a starting point based on the current actual market data.
 
 
-In the webscraping step, we should acquire all listings available in each condo, not only average price per sqm. This should increase numerous numbers of records and it would be very useful to estimate the price for every single room in the future.
+In the web scraping step, we should acquire all listings available in each condo, not only average price per sqm. This should increase numerous numbers of records and it would be very useful to estimate the price for every single room in the future.
 
 
-We have scraped some quarterly historical prices but still did not use in this project since there were some unreliability issues in the data. It required verification and data cleaning. This historical data can be really useful to visualize the trends for each condo/area (which areas are growing rapidly and/or reaching plateau stage or declining). 
+We dropped the name of public transports, supermarkets, restaurants, schools, hospitals from the basetable before feeding data to the models. With finer feature engineering and variable selections, it could help improve the predicting performance in the future.
+
+Finally, we have scraped some quarterly historical prices but still did not use in this project since there were some unreliability issues in the data. It required some more detailed verification and data cleaning. This historical data can be really useful to visualize the trends for each condo/area (which areas are growing rapidly, which area are reaching plateau stage or declining). 
 
 
 For detail explanation, please refer to the [PDF report](https://github.com/ekapope/Predicting-condominium-price-using-data-from-webscraping/blob/master/Predicting-condominium-price-using-data-from-webscraping.pdf).
